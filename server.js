@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const nodemailer = require('nodemailer');
+const path = require('path');
 require('dotenv').config();
 
 const app = express();
@@ -9,26 +10,33 @@ const PORT = 3000;
 
 app.use(cors());
 app.use(bodyParser.json());
+app.use(express.static(__dirname));
 
+// Keep these aliases so links work regardless of how folder names are cased.
+app.use('/styles', express.static(path.join(__dirname, 'Styles')));
+app.use('/Styles', express.static(path.join(__dirname, 'Styles')));
+
+const emailUser = process.env.EMAIL_USER;
+const emailPass = (process.env.EMAIL_PASS || '').replace(/\s+/g, '');
 
 const transporter = nodemailer.createTransport({
   service: 'gmail',
   auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
+    user: emailUser,
+    pass: emailPass
   }
 });
 
 transporter.verify((error, success) => {
   if (error) {
-    console.error('Transporter verification failed:', error);
+    console.error('Transporter verification failed. Server is running, but email sending will fail until credentials are fixed:', error.message);
   } else {
     console.log('Transporter is ready to send emails');
   }
 });
 
 app.get('/', (req, res) => {
-  res.send('Server is running');
+  res.sendFile(path.join(__dirname, 'loading_screen.html'));
 });
 
 app.post('/send-matched-email', (req, res) => {
@@ -41,7 +49,7 @@ app.post('/send-matched-email', (req, res) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: emailUser,
     to: studentEmail,
     subject: 'Item Match Notification',
     html: `
@@ -73,7 +81,7 @@ app.post('/send-acceptance-email', (req, res) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: emailUser,
     to: studentEmail,
     subject: 'Account Accepted',
     html: `
@@ -104,7 +112,7 @@ app.post('/send-rejection-email', (req, res) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: emailUser,
     to: studentEmail,
     subject: 'Account Rejection Notification',
     html: `
@@ -136,7 +144,7 @@ app.post('/send-verification-code', (req, res) => {
   }
 
   const mailOptions = {
-    from: process.env.EMAIL_USER,
+    from: emailUser,
     to: studentEmail,
     subject: 'Password Reset Verification Code',
     html: `

@@ -88,3 +88,19 @@ For production, PM2 is recommended as it provides process management, automatic 
 Secure the server with HTTPS in production environments.
 Code Consolidation: The server code includes multiple Express setups, which may cause conflicts (e.g., multiple servers on port 3000). Consider consolidating all endpoints into a single server.js file with one app.listen(PORT).
 
+Additional Project (Visual Basic)
+
+Project Name: Gym Management System
+Language/Stack: Visual Basic (VB)
+Repository: https://github.com/Tsukimitisu/Gym-Management-System.git
+
+Description:
+The Gym Management System is a desktop application built in Visual Basic to streamline daily gym operations. It is designed to help administrators manage member records, registration, attendance, subscription plans, and payment tracking in one organized interface. The system focuses on faster staff workflows, reduced manual paperwork, and more accurate member data management.
+
+Key Features:
+- Member registration and profile management
+- Membership plan and subscription monitoring
+- Attendance logging and history tracking
+- Payment recording and status monitoring
+- Basic admin tools for maintaining gym records
+
